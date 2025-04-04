@@ -3,3 +3,7 @@
 __pycache__/
 *.pyc
 venv/
+
+Readme_to_Run.txt
+requirements.txt
+script.txt
