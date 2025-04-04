@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload to Cloudinary</title>
+    <style>
+        #loading {
+            display: none;
+            font-weight: bold;
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+    <h2>Choose file</h2>
+    <input type="file" id="fileInput">
+    <button onclick="uploadFile()">Upload File</button>
+    
+    <p id="loading">⏳ Uploading...</p>
+    <p id="result"></p>
+
+    <script>
+        async function uploadFile() {
+            const fileInput = document.getElementById("fileInput");
+            if (fileInput.files.length === 0) {
+                alert("Please choose a file!");
+                return;
+            }
+
+            if (fileInput.files[0].size > 10 * 1024 * 1024) {
+                alert("File is too big! (Max 10MB)");
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const formData = new FormData();
+            formData.append("file", file);
+
+            //  แสดงข้อความกำลังอัปโหลด
+            document.getElementById("loading").style.display = "block";
+            document.getElementById("result").innerHTML = "";
+
+            try {
+                const response = await fetch("/upload", {
+                    method: "POST",
+                    body: formData
+                });
+
+                const result = await response.json();
+                
+                document.getElementById("loading").style.display = "none"; // ซ่อน
+                document.getElementById("result").innerHTML = response.ok
+                    ? `<a href="${result.cloudinary_url}" target="_blank">View file link</a>`
+                    : `❌ Error: ${result.error}`;
+            } catch (error) {
+                document.getElementById("loading").style.display = "none";
+                alert("❌ Error uploading file!");
+            }
+        }
+    </script>
+</body>
+</html>

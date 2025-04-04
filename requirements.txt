@@ -1,0 +1,8 @@
+flask
+flask-cors
+python-dotenv
+cloudinary
+
+fastapi
+uvicorn
+
